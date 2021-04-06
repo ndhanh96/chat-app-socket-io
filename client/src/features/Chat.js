@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
+
 const socket = io('http://localhost:3001/');
 
 export default function Chat() {
   const [chatList, setChatList] = useState('');
+  const [chatmsg, setChatmsg] = useState([]);
   const name = useSelector((state) => state.users.name);
   const history = useHistory();
 
@@ -26,8 +28,18 @@ export default function Chat() {
     }
   };
 
+  socket.on('incomingmsg', (arg) => {
+    if (chatmsg[chatmsg.length - 1] !== arg) {
+      console.log(chatmsg[chatmsg.length - 1])
+      setChatmsg((oldmsg) => [...oldmsg, arg]);
+      
+    }
+  });
+
   useEffect(() => {
     setNameForSockIO();
+    
+    console.log('run effect');
   }, [name]);
 
   return (
@@ -41,6 +53,11 @@ export default function Chat() {
       >
         <input value={chatList} onChange={(e) => setChatList(e.target.value)} />
       </form>
+      <ul>
+        {chatmsg.map((msg) => (
+          <li>{msg}</li>
+        ))}
+      </ul>
     </>
   );
 }

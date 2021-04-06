@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
 app.post('/chat', (req, res) => {
   let name = req.body.username;
-  chatProcess.chat(io, name, res);
+  chatProcess.chat(io, req.body.username, res);
 });
 
 http.listen(3001, () => {
