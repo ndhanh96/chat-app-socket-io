@@ -22,11 +22,11 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    // setChatmsg(receivemsg);
     console.log(receivemsg);
-    // console.log(chatmsg);
-    setChatmsg(oldmsg => [...oldmsg, receivemsg])
-    console.log(chatmsg)
+    if (receivemsg.length > 0) {
+      setChatmsg((oldmsg) => [...oldmsg, receivemsg]);
+    }
+    console.log(chatmsg);
   }, [receivemsg]);
 
   return (
@@ -35,18 +35,24 @@ export default function Chat() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-
-          socket.emit('clientSent', { name: name, msg: chatList });
+          if(chatList) {
+            socket.emit('clientSent', { name: name, msg: chatList });
+            setChatmsg((oldmsg) => [...oldmsg, [name, chatList]]);
+          }
           setChatList('');
         }}
       >
         <input value={chatList} onChange={(e) => setChatList(e.target.value)} />
       </form>
-      <ul>
-        {chatmsg.map((msg) => (
-          <li>{`${msg[0]}: ${msg[1]}`}</li>
-        ))}
-      </ul>
+      {chatmsg.length != 0 ? (
+        <ul>
+          {chatmsg.map((msg) => (
+            <li>{`${msg[0]}: ${msg[1]}`}</li>
+          ))}
+        </ul>
+      ) : (
+        ''
+      )}
     </>
   );
 }
