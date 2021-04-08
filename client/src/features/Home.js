@@ -16,9 +16,9 @@ export default function Users() {
   const history = useHistory();
   const name = useSelector((state) => state.users.name);
   const dispatch = useDispatch();
-  
+
   if (name && !username) {
-    dispatch(setName(''))
+    dispatch(setName(''));
   }
 
   return (
@@ -26,8 +26,8 @@ export default function Users() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(setName(username))
-          history.push('/chat')
+          dispatch(setName(username));
+          history.push('/chat');
         }}
       >
         <input value={username} onChange={(e) => setUserName(e.target.value)} />

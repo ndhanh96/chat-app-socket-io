@@ -19,8 +19,10 @@ app.get('/', (req, res) => {
 
 app.post('/chat', (req, res) => {
   let name = req.body.username;
-  chatProcess.chat(io, req.body.username, res);
 });
+
+chatProcess.chat(io, 'name', 'res');
+
 
 http.listen(3001, () => {
   console.log('server is listening at port 3001');

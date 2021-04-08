@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
-
 const socket = io('http://localhost:3001/');
 
 export default function Chat() {
   const [chatList, setChatList] = useState('');
+  const [receivemsg, SetReceivemsg] = useState([]);
   const [chatmsg, setChatmsg] = useState([]);
   const name = useSelector((state) => state.users.name);
   const history = useHistory();
@@ -16,31 +16,18 @@ export default function Chat() {
     history.push('/');
   }
 
-  const setNameForSockIO = async () => {
-    if (name) {
-      try {
-        const response = await axios.post('http://localhost:3001/chat', {
-          username: name,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
-  socket.on('incomingmsg', (arg) => {
-    if (chatmsg[chatmsg.length - 1] !== arg) {
-      console.log(chatmsg[chatmsg.length - 1])
-      setChatmsg((oldmsg) => [...oldmsg, arg]);
-      
-    }
+  socket.on('serverSent', (arg) => {
+    // console.log(arg)
+    SetReceivemsg(arg);
   });
 
   useEffect(() => {
-    setNameForSockIO();
-    
-    console.log('run effect');
-  }, [name]);
+    // setChatmsg(receivemsg);
+    console.log(receivemsg);
+    // console.log(chatmsg);
+    setChatmsg(oldmsg => [...oldmsg, receivemsg])
+    console.log(chatmsg)
+  }, [receivemsg]);
 
   return (
     <>
@@ -48,14 +35,16 @@ export default function Chat() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          socket.emit('chat', chatList);
+
+          socket.emit('clientSent', { name: name, msg: chatList });
+          setChatList('');
         }}
       >
         <input value={chatList} onChange={(e) => setChatList(e.target.value)} />
       </form>
       <ul>
         {chatmsg.map((msg) => (
-          <li>{msg}</li>
+          <li>{`${msg[0]}: ${msg[1]}`}</li>
         ))}
       </ul>
     </>
