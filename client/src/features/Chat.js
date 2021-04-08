@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 const socket = io('http://localhost:3001/');
 
 export default function Chat() {
-  const [chatList, setChatList] = useState('');
+  const [myMsg, setmyMsg] = useState('');
   const [receivemsg, SetReceivemsg] = useState([]);
   const [chatmsg, setChatmsg] = useState([]);
   const name = useSelector((state) => state.users.name);
@@ -22,11 +22,10 @@ export default function Chat() {
   });
 
   useEffect(() => {
-    console.log(receivemsg);
     if (receivemsg.length > 0) {
       setChatmsg((oldmsg) => [...oldmsg, receivemsg]);
     }
-    console.log(chatmsg);
+    
   }, [receivemsg]);
 
   return (
@@ -35,19 +34,19 @@ export default function Chat() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if(chatList) {
-            socket.emit('clientSent', { name: name, msg: chatList });
-            setChatmsg((oldmsg) => [...oldmsg, [name, chatList]]);
+          if(myMsg) {
+            socket.emit('clientSent', { name: name, msg: myMsg });
+            setChatmsg((oldmsg) => [...oldmsg, [name, myMsg, Date.parse(new Date())]]);
           }
-          setChatList('');
+          setmyMsg('');
         }}
       >
-        <input value={chatList} onChange={(e) => setChatList(e.target.value)} />
+        <input value={myMsg} onChange={(e) => setmyMsg(e.target.value)} />
       </form>
-      {chatmsg.length != 0 ? (
+      {chatmsg.length !== 0 ? (
         <ul>
           {chatmsg.map((msg) => (
-            <li>{`${msg[0]}: ${msg[1]}`}</li>
+            <li key={msg[2]} >{`${msg[0]}: ${msg[1]}`}</li>
           ))}
         </ul>
       ) : (
