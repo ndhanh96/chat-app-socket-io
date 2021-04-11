@@ -1,15 +1,16 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
 import '../style/Chat.scss';
-const socket = io('http://localhost:3001/');
+const socket = io('http://18.138.157.228:3001/');
 
 export default function Chat() {
   const [myMsg, setmyMsg] = useState('');
   const [receivemsg, SetReceivemsg] = useState([]);
   const [chatmsg, setChatmsg] = useState([]);
+  const msgview  = useRef(null);
   const name = useSelector((state) => state.users.name);
   const history = useHistory();
 
@@ -17,8 +18,8 @@ export default function Chat() {
     history.push('/');
   }
 
-  const scrollToMsg = (hashName) => {
-    window.location.hash = '#' + hashName;
+  const scrollToMsg = () => {
+    msgview.current.scrollIntoView();
   };
 
   socket.on('serverSent', (arg) => {
@@ -35,9 +36,9 @@ export default function Chat() {
   useEffect(() => {
     if (chatmsg.length > 0) {
       let hashName = chatmsg[chatmsg.length - 1][2];
-      scrollToMsg(hashName);
-      console.log(hashName)
-    }
+      scrollToMsg();
+      console.log(hashName);
+    } 
   }, [chatmsg]);
 
   return (
@@ -46,7 +47,7 @@ export default function Chat() {
       <ul>
         {chatmsg.length !== 0
           ? chatmsg.map((msg) => (
-              <li id={msg[2]} key={msg[2]}>
+              <li ref={msgview} id={msg[2]} key={msg[2]}>
                 {' '}
                 <span className='sender'>{msg[0]}</span> {`: ${msg[1]}`}
               </li>
@@ -67,7 +68,10 @@ export default function Chat() {
           setmyMsg('');
         }}
       >
-        <input value={myMsg} onChange={(e) => setmyMsg(e.target.value)} />
+        <input
+            value={myMsg}
+          onChange={(e) => setmyMsg(e.target.value)}
+        />
         <button type='submit'>Send</button>
       </form>
     </div>
