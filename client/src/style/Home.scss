@@ -1,0 +1,26 @@
+.nameInputBox {
+  // margin: 5px;
+  // border: 1px solid;
+  display: grid;
+  grid-template-columns: 1;
+  height: 80vh;
+  place-items: center;
+}
+.nameInputForm {
+  display: grid;
+  // justify-content: center;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto;
+  .nameInput {
+    height: 20px;
+    width: 200px;
+    border: 3px solid rgba(1, 0, 0, 0.783);
+    outline: none;
+    border-radius: 0;
+    box-shadow: 0 0 0 5px #fa04fa, 0 0 0 8px #e770f2;
+    margin: auto;
+  }
+  .nameInput:focus {
+    border: 3px solid rgba(1, 0, 0, 0.783);
+  }
+}

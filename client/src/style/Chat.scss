@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab+Highlight:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+*,
+html {
+  scroll-behavior: smooth;
+}
+
+ul {
+  list-style: none;
+  height: 300px;
+  // width: 100%;
+  border: 3px solid black;
+
+  overflow: scroll;
+  li {
+    font-family: 'Nunito', sans-serif;
+  }
+  .sender {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+  }
+}
+
+h1 {
+  font-family: 'Zilla Slab Highlight', cursive;
+}
+
+.chatBox {
+  display: grid;
+  height: 50vh;
+  grid-template-columns: minmax(300px, 600px);
+  justify-content: center;
+}
+
+.input {
+  width: 100%;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  button {
+    background-color: rgba(0, 0, 0, 0.605);
+    color: rgba(227, 36, 220, 0.886);
+    font-size: 30px;
+    font-family: 'Nunito', sans-serif;
+  }
+}

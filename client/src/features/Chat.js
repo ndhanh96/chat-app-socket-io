@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
+import '../style/Chat.scss';
 const socket = io('http://localhost:3001/');
 
 export default function Chat() {
@@ -16,6 +17,10 @@ export default function Chat() {
     history.push('/');
   }
 
+  const scrollToMsg = (hashName) => {
+    window.location.hash = '#' + hashName;
+  };
+
   socket.on('serverSent', (arg) => {
     // console.log(arg)
     SetReceivemsg(arg);
@@ -25,33 +30,46 @@ export default function Chat() {
     if (receivemsg.length > 0) {
       setChatmsg((oldmsg) => [...oldmsg, receivemsg]);
     }
-    
   }, [receivemsg]);
 
+  useEffect(() => {
+    if (chatmsg.length > 0) {
+      let hashName = chatmsg[chatmsg.length - 1][2];
+      scrollToMsg(hashName);
+      console.log(hashName)
+    }
+  }, [chatmsg]);
+
   return (
-    <>
+    <div className='chatBox'>
       <h1>Welcome to chat room {name}</h1>
+      <ul>
+        {chatmsg.length !== 0
+          ? chatmsg.map((msg) => (
+              <li id={msg[2]} key={msg[2]}>
+                {' '}
+                <span className='sender'>{msg[0]}</span> {`: ${msg[1]}`}
+              </li>
+            ))
+          : ''}
+      </ul>
+
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if(myMsg) {
+          if (myMsg) {
             socket.emit('clientSent', { name: name, msg: myMsg });
-            setChatmsg((oldmsg) => [...oldmsg, [name, myMsg, Date.parse(new Date())]]);
+            setChatmsg((oldmsg) => [
+              ...oldmsg,
+              [name, myMsg, Date.parse(new Date())],
+            ]);
           }
           setmyMsg('');
         }}
       >
         <input value={myMsg} onChange={(e) => setmyMsg(e.target.value)} />
+        <button type='submit'>Send</button>
       </form>
-      {chatmsg.length !== 0 ? (
-        <ul>
-          {chatmsg.map((msg) => (
-            <li key={msg[2]} >{`${msg[0]}: ${msg[1]}`}</li>
-          ))}
-        </ul>
-      ) : (
-        ''
-      )}
-    </>
+    </div>
   );
 }

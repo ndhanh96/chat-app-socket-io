@@ -8,6 +8,7 @@ import {
   Redirect,
   useHistory,
 } from 'react-router-dom';
+import '../style/Home.scss'
 
 import { setName } from './usersSlice';
 
@@ -22,15 +23,18 @@ export default function Users() {
   }
 
   return (
-    <div>
+    <div className='nameInputBox'>
+      
       <form
         onSubmit={(e) => {
           e.preventDefault();
           dispatch(setName(username));
           history.push('/chat');
         }}
+        className='nameInputForm'
       >
-        <input value={username} onChange={(e) => setUserName(e.target.value)} />
+        <h1>Type your name to chat</h1>
+        <input className='nameInput' value={username} onChange={(e) => setUserName(e.target.value)} placeholder='your name goes here...'/>
       </form>
       {name}
     </div>
