@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
 import '../style/Chat.scss';
-const socket = io('http://18.138.157.228:3001/');
+const socket = io('https://randomass.xyz/');
 
 export default function Chat() {
   const [myMsg, setmyMsg] = useState('');
