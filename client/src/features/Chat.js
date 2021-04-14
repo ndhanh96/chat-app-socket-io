@@ -4,13 +4,13 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { io } from 'socket.io-client';
 import '../style/Chat.scss';
-const socket = io('https://randomass.xyz/');
+const socket = io('https://randomass.xyz/', { path: '/api/socketio' });
 
 export default function Chat() {
   const [myMsg, setmyMsg] = useState('');
   const [receivemsg, SetReceivemsg] = useState([]);
   const [chatmsg, setChatmsg] = useState([]);
-  const msgview  = useRef(null);
+  const msgview = useRef(null);
   const name = useSelector((state) => state.users.name);
   const history = useHistory();
 
@@ -38,7 +38,7 @@ export default function Chat() {
       let hashName = chatmsg[chatmsg.length - 1][2];
       scrollToMsg();
       console.log(hashName);
-    } 
+    }
   }, [chatmsg]);
 
   return (
@@ -68,10 +68,7 @@ export default function Chat() {
           setmyMsg('');
         }}
       >
-        <input
-            value={myMsg}
-          onChange={(e) => setmyMsg(e.target.value)}
-        />
+        <input value={myMsg} onChange={(e) => setmyMsg(e.target.value)} />
         <button type='submit'>Send</button>
       </form>
     </div>
